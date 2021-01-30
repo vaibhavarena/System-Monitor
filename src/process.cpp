@@ -24,13 +24,9 @@ float Process::CpuUtilization() const{
 
     long seconds = up_time - (start_time / hertz);
 
-    float utilization = (((total_time * 1.0) / hertz) / seconds) * 100.0;
+    float cpu_usage = ((total_time * 1.0) / hertz) / seconds;
 
-    float result = utilization - _prevUtilization;
-
-    _prevUtilization = utilization;
-
-    return result;
+    return cpu_usage;
  }
 
 // TODO: Return the command that generated this process
@@ -43,7 +39,12 @@ string Process::Ram() { return LinuxParser::Ram(_pid); }
 string Process::User() { return LinuxParser::User(_pid); }
 
 // TODO: Return the age of this process (in seconds)
-long int Process::UpTime() { return LinuxParser::UpTime(_pid); }
+long int Process::UpTime() { 
+    long process_time = LinuxParser::UpTime(_pid); 
+    long sys_time = LinuxParser::UpTime();
+
+    return sys_time - process_time;
+    }
 
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
